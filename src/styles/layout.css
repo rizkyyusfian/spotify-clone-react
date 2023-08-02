@@ -1,0 +1,9 @@
+* {
+  box-sizing: border-box;
+  font-family: "Open Sans", sans-serif;
+  letter-spacing: -0.35px;
+}
+
+.layout {
+  min-height: 200vh;
+}
