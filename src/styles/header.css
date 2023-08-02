@@ -1,0 +1,124 @@
+.header {
+    position: fixed;
+    top: 0;
+    left: 230px;
+    /* sidebar width */
+    right: 0;
+    height: 80px;
+    background-color: rgb(18, 18, 18);
+}
+
+/* .header {
+    position: fixed;
+    top: 0;
+    left: 230px; 
+    
+    right: 0;
+    height: 60px;
+    background-color: rgb(18, 18, 18);
+    padding-left: 24px;
+    padding-right: 240px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    z-index:1;
+} */
+
+.header--button {
+    background: rgb(7, 7, 7);
+    color: #fff;
+    border: 0;
+    border-radius: 50%;
+    height: 34px;
+    width: 34px;
+    cursor: pointer;
+    outline: 0;
+}
+
+.header--button.previous {
+    margin-right: 20px;
+    margin-left: 20px;
+}
+
+.dropdown {
+    position: relative;
+    margin-right: 20px;
+}
+
+.dropdown--button {
+    outline: 0;
+    border: 0;
+    color: #fff;
+    border-radius: 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: rgb(45, 45, 45);
+    padding: 8px 16px 8px 10px;
+    font-size: 0.75rem;
+    line-height: 0.75rem;
+    cursor: pointer;
+    user-select: none;
+    box-shadow: 0px 3px 3px 1px rgba(0, 0, 0, 0.5);
+}
+
+.header .dropdown--button span:not(:last-child) {
+    margin-right: 10px;
+}
+
+.header .dropdown--button .user-icon {
+    font-size: 1.3rem;
+}
+
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.dropdown--button:hover,
+.dropdown.open .dropdown--content li:hover {
+    background-color: rgb(49, 49, 49);
+    color: #fff;
+}
+
+.dropdown--content {
+    position: absolute;
+    list-style: none;
+    right: 0;
+    margin: 10px 0 0 0;
+    padding: 0;
+    width: 160px;
+    background-color: rgb(40, 40, 40);
+    border-radius: 5px;
+    box-shadow: 0px 3px 3px 1px rgba(0, 0, 0, 0.5);
+    display: none;
+    text-align: left;
+    display: none;
+}
+
+.dropdown .dropdown--content li {
+    padding-left: 15px;
+    font-size: 0.9rem;
+    color: #b3b3b3;
+    /* user-select: none; */
+    height: 40px;
+    line-height: 40px;
+}
+
+.dropdown .dropdown--content li:first-child {
+    border-top-left-radius: 5px;
+    border-top-right-radius: 5px;
+}
+
+.dropdown .dropdown--content li:last-child {
+    border-top: 1px solid rgb(64, 64, 64);
+    border-bottom: 0;
+    border-bottom-left-radius: 5px;
+    border-bottom-right-radius: 5px;
+}
+
+.dropdown .dropdown--content li:hover {
+    background-color: rgb(49, 49, 49);
+    color: #fff;
+}
