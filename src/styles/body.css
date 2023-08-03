@@ -1,5 +1,9 @@
 .body {
-  margin: 0px;
-  min-height: 100vh;
-  background-color: dodgerblue;
+    padding: 80px 32px 32px 262px;
+    max-height: 100vh;
+    min-height: 100vh;
+    /* background: dodgerblue; */
+    overflow-y: auto;
+    background-color: rgb(18, 18, 18);
+    background: dodgerblue;
 }

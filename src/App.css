@@ -3,3 +3,9 @@
   margin: 0;
   color: #fff;
 }
+
+* {
+  box-sizing: border-box;
+  font-family: "Open Sans", sans-serif;
+  letter-spacing: -0.35px;
+}
