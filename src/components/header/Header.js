@@ -1,17 +1,18 @@
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, useContext } from 'react';
 import '../../styles/header.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { solid } from '@fortawesome/fontawesome-svg-core/import.macro'
-import { SearchContext } from '../../contexts/SearchContext';
+import SearchContext from '../../contexts/SearchContext';
 
-const Header = () => {
+const Header = ({ updateSearchResults }) => {
     const [accessToken, setAccessToken] = useState(null);
     const [dropdown, setDropdown] = useState(false);
     const [query, setQuery] = useState('');
-    const [searchResults, setSearchResults] = useState([{}]);
     const dropdownRef = useRef(null);
 
-    // subscribe to the search context
+    const handlePassedSearchResults = (results) => {
+        updateSearchResults(results);
+    }
 
     // generate PKCE code verifier
     const generateRandomString = (length) => {
@@ -64,10 +65,7 @@ const Header = () => {
             });
 
             window.location = 'https://accounts.spotify.com/authorize?' + args;
-
         });
-
-
     };
 
 
@@ -157,7 +155,8 @@ const Header = () => {
             },
         })
             .then((response) => response.json())
-            .then((data) => setSearchResults(data.tracks.items))
+            // .then((data) => setSearchResults(data.tracks.items))
+            .then((data) => handlePassedSearchResults(data.tracks.items))
             .catch((error) => console.error('Error searching for tracks:', error));
     };
 
@@ -167,60 +166,71 @@ const Header = () => {
         setTimeout(handleSearch, 500);
     };
 
+    const handleLogout = () => {
+        setAccessToken(null);
+        setQuery(null);
+
+        window.location = 'http://localhost:3000/';
+
+    }
+
+    useEffect(() => {
+        if (accessToken) {
+            handleChange();
+        }
+    }, []);
+
     return (
-        <SearchContext.Provider value={{ searchResults, setSearchResults }}>
-            <div ref={dropdownRef} className="header">
-                <div className="header--buttons">
-                    <button className="header--button previous">
-                        <FontAwesomeIcon icon={solid("chevron-left")} />
+
+        <div ref={dropdownRef} className="header">
+            <div className="header--buttons">
+                <button className="header--button previous">
+                    <FontAwesomeIcon icon={solid("chevron-left")} />
+                </button>
+                <button className="header--button next">
+                    <FontAwesomeIcon icon={solid("chevron-right")} />
+                </button>
+            </div>
+
+            {/* Search */}
+            <div className="header--search input-group has-left-icon has-right-icon can-delete">
+                <span className="left-icon lni lni-search"> <FontAwesomeIcon icon={solid("search")} /></span>
+
+                <input type="text" onChange={handleChange} id="search" name="search" className="input" placeholder="Search" value={query} />
+            </div>
+
+            {accessToken ?
+                <div className="dropdown">
+                    <button className="dropdown--button" onClick={toggleDropdown}>
+                        <span className="user-icon">
+                            <FontAwesomeIcon icon={solid("user")} />
+                        </span>
+                        <span className="text-bold">
+                            Username
+                        </span>
+                        <span>
+                            <FontAwesomeIcon icon={solid("chevron-down")} />
+                        </span>
                     </button>
-                    <button className="header--button next">
-                        <FontAwesomeIcon icon={solid("chevron-right")} />
-                    </button>
+                    {dropdown && (
+                        <ul className="dropdown--content" style={{ display: 'block' }}>
+                            <li>Profile</li>
+                            <li>Setting</li>
+                            <li><button onClick={handleLogout}>Logout</button></li>
+                            {/* <ul>
+                                {searchResults.map((track) => (
+                                    <li key={track.id}>{track.name}</li>
+                                ))}
+                            </ul> */}
+                        </ul>
+                    )}
                 </div>
-
-                {/* Search */}
-                <div className="header--search input-group has-left-icon has-right-icon can-delete">
-                    <span className="left-icon lni lni-search"> <FontAwesomeIcon icon={solid("search")} /></span>
-
-                    <input type="text" onChange={handleChange} id="search" name="search" className="input" placeholder="Search" value={query} />
+                :
+                <div className="dropdown">
+                    <button onClick={handleLogin} className="Auth--btn">Log in</button>
                 </div>
-
-                {accessToken ?
-                    <div className="dropdown">
-                        <button className="dropdown--button" onClick={toggleDropdown}>
-                            <span className="user-icon">
-                                <FontAwesomeIcon icon={solid("user")} />
-                            </span>
-                            <span className="text-bold">
-                                Login
-                            </span>
-                            <span>
-                                <FontAwesomeIcon icon={solid("chevron-down")} />
-                            </span>
-                        </button>
-                        {dropdown && (
-                            <ul className="dropdown--content" style={{ display: 'block' }}>
-                                <li>Profile</li>
-                                <li>Setting</li>
-                                <li>Logout</li>
-                                <ul>
-                                    {searchResults.map((track) => (
-                                        <li key={track.id}>{track.name}</li>
-                                    ))}
-                                </ul>
-                            </ul>
-                        )}
-                    </div>
-                    :
-                    <div className="dropdown">
-                        <button onClick={handleLogin} className="Auth--btn">Log in</button>
-                    </div>
-
-                }
-                {/* {accessToken ? <div className="Auth--btn">LOG OUT</div> : <button onClick={handleLogin} className="Auth--btn">LOG IN</button>} */}
-            </div >
-        </SearchContext.Provider>
+            }
+        </div >
     )
 }
 

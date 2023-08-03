@@ -1,18 +1,28 @@
+import { useState } from 'react';
 import "../../styles/layout.css";
 import Header from '../header/Header';
-import Body from '../Body';
 import Sidebar from '../sidebar/Sidebar';
+import Body from '../body/Body';
+import SearchContext from '../../contexts/SearchContext';
 
+function Layout() {
+    const [searchResults, setSearchResults] = useState(null);
 
-function Layout({children}) {
+    const updateSearchResults = (results) => {
+        setSearchResults(results);
+    }
+
     return (
         <div className="layout">
-            <Header />
-            <Sidebar />
-            <Body />
-            
-            { children }
+            <SearchContext.Provider value={{ searchResults, setSearchResults }}>
+                <Sidebar />
+                <Header
+                    updateSearchResults={updateSearchResults}
+                />
+                <Body />
+            </SearchContext.Provider>
         </div>
+
     )
 }
 

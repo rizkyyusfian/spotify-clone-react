@@ -1,0 +1,131 @@
+.body {
+  padding: 80px 32px 32px 262px;
+  max-height: 100vh;
+  min-height: 100vh;
+  /* background: dodgerblue; */
+  overflow-y: auto;
+  background-color: rgb(18, 18, 18);
+}
+
+.body .section .subtitle {
+  color: #b3b3b3;
+  font-size: 1rem;
+  margin-top: -8px;
+  font-weight: 100;
+}
+
+.body::-webkit-scrollbar {
+  width: 16px;
+}
+
+.body::-webkit-scrollbar-thumb {
+  background-color: #909090;
+}
+
+.body::-webkit-scrollbar-track {
+  background-color: rgb(18, 18, 18);
+}
+
+.section--header {
+  display: flex;
+  justify-content: space-between;
+}
+
+.section--body {
+  display: flex;
+  flex-direction: row;
+  justify-content: left
+}
+
+.section--header--right--more,
+.section--body--item--subtitle,
+.section--body--item--subtitle a {
+  color: #b3b3b3;
+  font-size: 0.8rem;
+  text-decoration: none;
+}
+
+.section--header--right--more:hover,
+.section--body--item--subtitle a:hover {
+  border-bottom: 1px solid #b3b3b3;
+}
+
+.section--header--right--more {
+  font-weight: 700;
+  letter-spacing: 1.35px;
+}
+
+.section--body--item {
+  width: 165px;
+  height: 240px;
+  background-color: rgb(38, 38, 38);
+}
+
+.section--body--item.album--item,
+.section--body--item.artist--item {
+  padding: 20px;
+  margin: 0px 20px;
+  cursor: pointer;
+  border-radius: 6px;
+}
+
+.section--body--item:hover {
+  background-color: rgb(49, 49, 49);
+  color: #fff;
+}
+
+.section--body--item .section--body--item--img {
+  width: 125px;
+  height: 125px;
+  margin: 0 auto;
+}
+
+.section--body--item .section--body--item--img img {
+  max-width: 100%;
+  height: auto;
+  box-shadow: 0 10px 30px 0 rgba(0, 0, 0, .3), 0 1px 2px 0 rgba(0, 0, 0, .2);
+}
+
+.section--body--item--title {
+  margin-top: 1rem;
+  margin-bottom: 0;
+  font-weight: 600;
+  font-size: 0.9rem;
+  text-overflow: ellipsis;
+  overflow-x: hidden;
+  white-space: nowrap;
+}
+
+.section--body--item--subtitle {
+  margin: 0;
+  margin-top: 1px;
+}
+
+.section--body--item.artist--item .section--body--item--img img {
+  border-radius: 50%;
+}
+
+.section--body--item--play {
+  display: none;
+  height: 40px;
+  width: 40px;
+  border-radius: 50%;
+  background: #1db954;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  left: 75px;
+  bottom: 55px;
+  box-shadow: 0px 0px 8px 8px rgb(37, 37, 37);
+  cursor: default;
+}
+
+.section--body--item--play:hover,
+.section--body--item--play.active {
+  transform: scale(1.05);
+}
+
+.section--body--item:hover .section--body--item--play,
+.section--body--item--play.active {
+  display: flex;
+}
