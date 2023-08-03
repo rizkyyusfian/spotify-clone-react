@@ -1,6 +1,6 @@
 import '../../styles/sidebar.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { icon, brands, solid } from '@fortawesome/fontawesome-svg-core/import.macro'
+import { brands, solid } from '@fortawesome/fontawesome-svg-core/import.macro'
 import SidebarMenu from './SidebarMenu.js';
 import SidebarExtra from './SidebarExtra';
 import SidebarPlaylist from './SidebarPlaylist';
