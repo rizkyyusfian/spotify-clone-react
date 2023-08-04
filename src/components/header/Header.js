@@ -1,14 +1,15 @@
-import { useState, useEffect, useRef, useContext } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import '../../styles/header.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { solid } from '@fortawesome/fontawesome-svg-core/import.macro'
-import SearchContext from '../../contexts/SearchContext';
 
 const Header = ({ updateSearchResults }) => {
     const [accessToken, setAccessToken] = useState(null);
     const [dropdown, setDropdown] = useState(false);
     const [query, setQuery] = useState('');
     const dropdownRef = useRef(null);
+    const timeoutRef = useRef(null);
+
 
     const handlePassedSearchResults = (results) => {
         updateSearchResults(results);
@@ -33,7 +34,6 @@ const Header = ({ updateSearchResults }) => {
                 .replace(/\//g, '_')
                 .replace(/=+$/, '');
         }
-
         const encoder = new TextEncoder();
         const data = encoder.encode(codeVerifier);
         const digest = await window.crypto.subtle.digest('SHA-256', data);
@@ -43,9 +43,7 @@ const Header = ({ updateSearchResults }) => {
 
     const clientId = '5dfe0a24b79a4f108152956b9609d4e4';
     const redirectUri = 'http://localhost:3000/callback';
-
     const handleLogin = () => {
-
         let codeVerifier = generateRandomString(128);
 
         generateCodeChallenge(codeVerifier).then(codeChallenge => {
@@ -68,6 +66,84 @@ const Header = ({ updateSearchResults }) => {
         });
     };
 
+    const getToken = () => {
+        const urlParams = new URLSearchParams(window.location.search);
+        let code = urlParams.get('code');
+        let codeVerifier = localStorage.getItem('code_verifier');
+
+        let body = new URLSearchParams({
+            grant_type: 'authorization_code',
+            code: code,
+            redirect_uri: redirectUri,
+            client_id: clientId,
+            code_verifier: codeVerifier
+        });
+
+        // Exchange authorization code for access token
+        fetch('https://accounts.spotify.com/api/token', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded'
+            },
+            body: body
+        }).then(response => {
+            if (!response.ok) {
+                throw new Error('HTTP status ' + response.status);
+            }
+            return response.json();
+        }).then(data => {
+            setAccessToken(data.access_token);
+        }).catch(error => {
+            console.error('Error:', error);
+        });
+    };
+
+    const getSearch = () => {
+        // ttps://api.spotify.com/v1/search?q=${query}&type=track%2Cartist&limit=10
+        fetch(`https://api.spotify.com/v1/search?q=${query}&type=album%2Ctrack%2Cartist%2Cplaylist&limit=10`, {
+            method: "GET",
+            headers: {
+                Authorization: `Bearer ${accessToken}`,
+            },
+        })
+            .then((response) => response.json())
+            .then((data) => handlePassedSearchResults(data.tracks.items))
+            .catch((error) => console.error('Error searching for tracks:', error));
+    };
+
+    const handleSearchChange = (e) => {
+        setQuery(e.target.value);
+
+        clearTimeout(timeoutRef.current);
+
+        timeoutRef.current = setTimeout(() => {
+            if (e.target.value === '') {
+                handlePassedSearchResults(null);
+
+            } else {
+                // Call your function to fetch search results here (e.g., getSearchResults)
+                // Pass the search query as an argument
+                getSearch();
+            }
+        }, 500);
+    };
+
+    const getUserProfile = () => {
+        fetch('https://api.spotify.com/v1/me', {
+            method: 'GET',
+            headers: {
+                Authorization: `Bearer ${accessToken}`,
+            },
+        })
+            .then((response) => response.json())
+            .then((data) => localStorage.setItem('user', data.display_name))
+            .catch((error) => console.error('Error fetching user profile:', error));
+    };
+
+    const handleLogout = () => {
+        handlePassedSearchResults(null);
+        window.location = 'http://localhost:3000/';
+    }
 
     const toggleDropdown = () => {
         setDropdown(!dropdown);
@@ -80,104 +156,22 @@ const Header = ({ updateSearchResults }) => {
     };
 
     useEffect(() => {
-        // This function extracts the access token from the URL and stores it in the state
-        // const extractAccessTokenFromURL = () => {
-        //     const searchParams = new URLSearchParams(window.location.search);
-        //     const code = searchParams.get('code');
-        //     if (code) {
-        //         setAccessToken(code);
-        //     }
-        // };
+        // Call the function to extract the access token from the URL when the component mounts
+        getToken();
 
-        const handleToken = () => {
-
-            const urlParams = new URLSearchParams(window.location.search);
-            let code = urlParams.get('code');
-
-            let codeVerifier = localStorage.getItem('code_verifier');
-
-            let body = new URLSearchParams({
-                grant_type: 'authorization_code',
-                code: code,
-                redirect_uri: redirectUri,
-                client_id: clientId,
-                code_verifier: codeVerifier
-            });
-
-            // Exchange authorization code for access token
-            const response = fetch('https://accounts.spotify.com/api/token', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/x-www-form-urlencoded'
-                },
-                body: body
-            }).then(response => {
-                if (!response.ok) {
-                    throw new Error('HTTP status ' + response.status);
-                }
-                return response.json();
-            }).then(data => {
-                setAccessToken(data.access_token);
-                // localStorage.setItem('access_token', data.access_token);
-
-            }).catch(error => {
-                console.error('Error:', error);
-            });
+        if (accessToken) {
+            getUserProfile();
         }
 
-        // Call the function to extract the access token from the URL when the component mounts
-        handleToken();
-
-        // // Listen for changes to the URL and extract the access token when it changes
-        window.addEventListener('hashchange', handleToken);
-
-        // // Clean up the event listener when the component unmounts
-        return () => {
-            window.removeEventListener('hashchange', handleToken);
-        };
-    }, []);
-
-    useEffect(() => {
+        // Listen for changes to the URL and extract the access token when it changes
+        window.addEventListener('hashchange', getToken);
         document.addEventListener('mousedown', handleOutsideClick);
 
+        // Clean up the event listener when the component unmounts
         return () => {
+            window.removeEventListener('hashchange', getToken);
             document.removeEventListener('mousedown', handleOutsideClick);
         };
-    }, []);
-
-
-    const handleSearch = () => {
-        // ttps://api.spotify.com/v1/search?q=${query}&type=track%2Cartist&limit=10
-        fetch(`https://api.spotify.com/v1/search?q=${query}&type=album%2Ctrack%2Cartist%2Cplaylist&limit=10`, {
-            method: "GET",
-            headers: {
-                Authorization: `Bearer ${accessToken}`,
-            },
-        })
-            .then((response) => response.json())
-            // .then((data) => setSearchResults(data.tracks.items))
-            .then((data) => handlePassedSearchResults(data.tracks.items))
-            .catch((error) => console.error('Error searching for tracks:', error));
-    };
-
-    const handleChange = (e) => {
-        setQuery(e.target.value);
-        // Delay the API call by 500ms to avoid making a request on every key press
-        setTimeout(handleSearch, 500);
-    };
-
-    const handleLogout = () => {
-        setAccessToken(null);
-        setQuery(null);
-
-        window.location = 'http://localhost:3000/';
-
-    }
-
-    useEffect(() => {
-        if (accessToken) {
-            handleChange();
-        }
     }, []);
 
     return (
@@ -196,7 +190,7 @@ const Header = ({ updateSearchResults }) => {
             <div className="header--search input-group has-left-icon has-right-icon can-delete">
                 <span className="left-icon lni lni-search"> <FontAwesomeIcon icon={solid("search")} /></span>
 
-                <input type="text" onChange={handleChange} id="search" name="search" className="input" placeholder="Search" value={query} />
+                <input type="text" onChange={handleSearchChange} id="search" name="search" className="input" placeholder="Search" />
             </div>
 
             {accessToken ?
@@ -206,7 +200,7 @@ const Header = ({ updateSearchResults }) => {
                             <FontAwesomeIcon icon={solid("user")} />
                         </span>
                         <span className="text-bold">
-                            Username
+                            {localStorage.getItem('user')}
                         </span>
                         <span>
                             <FontAwesomeIcon icon={solid("chevron-down")} />
@@ -217,11 +211,6 @@ const Header = ({ updateSearchResults }) => {
                             <li>Profile</li>
                             <li>Setting</li>
                             <li><button onClick={handleLogout}>Logout</button></li>
-                            {/* <ul>
-                                {searchResults.map((track) => (
-                                    <li key={track.id}>{track.name}</li>
-                                ))}
-                            </ul> */}
                         </ul>
                     )}
                 </div>

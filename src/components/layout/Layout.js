@@ -22,7 +22,6 @@ function Layout() {
                 <Body />
             </SearchContext.Provider>
         </div>
-
     )
 }
 

@@ -1,11 +1,16 @@
-import { useContext } from 'react';
+import { useContext, useEffect } from 'react';
 import '../../styles/homepage.css';
 import MusicCard from './MusicCard';
 import SearchContext from '../../contexts/SearchContext';
 import Body from '../body/Body';
 
 const HomePage = () => {
-    const { searchResults, setSearchResults } = useContext(SearchContext);
+    const { searchResults } = useContext(SearchContext);
+
+    useEffect(() => {
+        console.log(searchResults);
+    }, [searchResults]);
+    
 
     return (
         <section className="section">
@@ -18,20 +23,7 @@ const HomePage = () => {
                 </div>
             </div>
             <div className="section--body">
-                {/* <MusicCard
-                    img="http://via.placeholder.com/150x150"
-                    title="Playlist name"
-                    subtitle="Playlist description"
-                    type="album"
-                />
-
-                <MusicCard
-                    img="http://via.placeholder.com/150x150"
-                    title="LEX"
-                    subtitle="Artist"
-                    type="artist"
-                /> */}
-                {searchResults && searchResults.map((item, index) => (
+                {searchResults ? searchResults.map((item, index) => (
                     <MusicCard
                         key={index}
                         img={item.album.images[1].url}
@@ -39,7 +31,7 @@ const HomePage = () => {
                         subtitle={item.artists[0].name}
                         type="album"
                     />
-                ))}
+                )) : <div></div>}
             </div>
         </section>
     )
