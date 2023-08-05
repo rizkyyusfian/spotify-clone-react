@@ -3,7 +3,7 @@
     padding: 24px 24px 0 24px;
     position: fixed;
     height: 100%;
-    width: 230px;
+    width: 345px;
 }
 
 .sidebar .brand {
@@ -17,7 +17,7 @@
 }
 
 .sidebar .brand svg {
-    width: 131px;
+    width: 70px;
 }
 
 .sidebar .menu .menu--item {
