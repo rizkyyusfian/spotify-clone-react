@@ -5,7 +5,7 @@ const SidebarMenu = ({ text, icon }) => {
     return (
         <div className="menu--item">
             <a href="#">
-                <FontAwesomeIcon icon={icon} /><span className="menu--item--text">{text}</span>
+                <FontAwesomeIcon icon={icon} /><span className="menu--item--title">{text}</span>
             </a>
         </div>
     )
