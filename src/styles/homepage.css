@@ -1,8 +1,7 @@
 .body {
-  padding: 80px 32px 32px 262px;
+  padding: 80px 32px 32px 377px;
   max-height: 100vh;
   min-height: 100vh;
-  /* background: dodgerblue; */
   overflow-y: auto;
   background-color: rgb(18, 18, 18);
 }
@@ -34,6 +33,7 @@
 .section--body {
   display: flex;
   flex-direction: row;
+  flex-wrap: wrap;
   justify-content: left
 }
 
@@ -64,7 +64,7 @@
 .section--body--item.album--item,
 .section--body--item.artist--item {
   padding: 20px;
-  margin: 0px 20px;
+  margin: 10px;
   cursor: pointer;
   border-radius: 6px;
 }
