@@ -1,10 +1,10 @@
 import "../../styles/sidebar.css"
 
-const SidebarTabCard = ({ text, subtitle }) => {
+const SidebarTabCard = ({ img, text, subtitle }) => {
     return (
         <div className="menu--item--tabs">
                 <div className="menu--item--image">
-                    <img src="http://via.placeholder.com/48" />
+                    <img src={img} />
                 </div>
                 <div className="menu--item--text">
                     <p className="menu--item--title">{text}</p>

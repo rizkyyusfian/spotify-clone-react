@@ -113,6 +113,8 @@
 .sidebar--download-app {
     position: absolute;
     bottom: 0;
+    margin-bottom: 20px;
+    font-size: 16px;
 }
 
 /* Start the menu item with a gray color */
@@ -180,9 +182,16 @@
 }
 
 .menu--item--tabs {
+    padding: 10px;
     display: flex;
     align-items: center;
     margin-bottom: 10px;
+    color: #B3B3B3;
+}
+
+.sidebar .menu.menu-extra .menu--item--tabs:hover{
+    background-color: rgb(49, 49, 49);
+    color: #fff;
 }
 
 .menu--item--image {

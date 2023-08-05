@@ -72,6 +72,7 @@
 .section--body--item:hover {
   background-color: rgb(49, 49, 49);
   color: #fff;
+  transition: all 350ms;
 }
 
 .section--body--item .section--body--item--img {
