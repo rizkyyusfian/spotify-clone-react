@@ -1,9 +1,9 @@
 import "../../styles/sidebar.css"
 
-const SidebarTabCard = ({ img, text, subtitle }) => {
+const SidebarTabCard = ({ img, text, subtitle, type }) => {
     return (
         <div className="menu--item--tabs">
-                <div className="menu--item--image">
+                <div className={type === "artist" ? "menu--item--image artist" : "menu--item--image"}>
                     <img src={img} />
                 </div>
                 <div className="menu--item--text">

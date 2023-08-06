@@ -19,9 +19,9 @@ const Sidebar = () => {
     };
 
     const linkTab = {
-        playlist: `https://api.spotify.com/v1/users/${localStorage.getItem('user_id')}/playlists?limit=10`,
-        album: `https://api.spotify.com/v1/me/albums?limit=10`,
-        artist: `https://api.spotify.com/v1/me/following?type=artist&limit=10`,
+        playlist: `https://api.spotify.com/v1/users/${localStorage.getItem('user_id')}/playlists?limit=8`,
+        album: `https://api.spotify.com/v1/me/albums?limit=8`,
+        artist: `https://api.spotify.com/v1/me/following?type=artist&limit=8`,
     }
 
     const getData = async () => {
@@ -45,7 +45,7 @@ const Sidebar = () => {
     }
 
     useEffect(() => {
-        if (localStorage.getItem('user_id')) {
+        if (sessionStorage.getItem('access_token')) {
             getData();
         }
     }, [activeTab]);
@@ -79,7 +79,6 @@ const Sidebar = () => {
                     Artist
                 </button>
             </div>
-            <p className="sidebar--header">PLAYLIST</p>
             <div className="menu menu-extra">
                 {(playlistData && activeTab === 'playlist') &&
                     playlistData.items.map((item, index) => (
@@ -88,6 +87,7 @@ const Sidebar = () => {
                             img={item.images[0].url}
                             text={item.name}
                             subtitle={item.owner.display_name}
+                            type={activeTab}
                         />
                     ))}
                 {(albumData && activeTab === 'album') &&
@@ -97,6 +97,7 @@ const Sidebar = () => {
                             img={item.album.images[0].url}
                             text={item.album.name}
                             subtitle={item.album.artists[0].name}
+                            type={activeTab}
                         />
                     ))}
                 {(artistData && activeTab === 'artist') &&
@@ -106,6 +107,7 @@ const Sidebar = () => {
                             img={item.images[0].url}
                             text={item.name}
                             subtitle=""
+                            type={activeTab}
                         />
                     ))}
             </div>
