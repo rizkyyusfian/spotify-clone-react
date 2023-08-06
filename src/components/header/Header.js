@@ -43,7 +43,7 @@ const Header = ({ updateSearchResults }) => {
 
         generateCodeChallenge(codeVerifier).then(codeChallenge => {
             let state = generateRandomString(16);
-            let scope = 'user-read-private user-read-email playlist-read-private user-library-read user-follow-read';
+            let scope = 'user-read-private user-read-email playlist-read-private user-library-read user-follow-read user-top-read';
 
             localStorage.setItem('code_verifier', codeVerifier);
 
@@ -59,6 +59,9 @@ const Header = ({ updateSearchResults }) => {
 
             window.location = 'https://accounts.spotify.com/authorize?' + args;
         });
+
+        // get token when login
+        getToken();
     };
 
     const getToken = () => {
@@ -125,7 +128,7 @@ const Header = ({ updateSearchResults }) => {
 
     const getSearch = () => {
         // ttps://api.spotify.com/v1/search?q=${query}&type=track%2Cartist&limit=10
-        fetch(`https://api.spotify.com/v1/search?q=${query}&type=album%2Ctrack%2Cartist%2Cplaylist&limit=10`, {
+        fetch(`https://api.spotify.com/v1/search?q=${query}&type=track&limit=10`, {
             method: "GET",
             headers: {
                 Authorization: `Bearer ${sessionStorage.getItem('access_token')}`,
@@ -186,8 +189,6 @@ const Header = ({ updateSearchResults }) => {
     };
 
     useEffect(() => {
-        // get token when login
-        getToken();
 
         if (accessToken) {
             getUserProfile();
@@ -230,7 +231,7 @@ const Header = ({ updateSearchResults }) => {
                             <FontAwesomeIcon icon={solid("user")} />
                         </span>
                         <span className="text-bold">
-                            {localStorage.getItem('user')}
+                            {accessToken && localStorage.getItem('user')}
                         </span>
                         <span>
                             <FontAwesomeIcon icon={solid("chevron-down")} />
