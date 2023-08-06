@@ -37,6 +37,12 @@
   justify-content: left
 }
 
+.section--header--right {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
 .section--header--right--more,
 .section--body--item--subtitle,
 .section--body--item--subtitle a {

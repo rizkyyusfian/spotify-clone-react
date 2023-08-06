@@ -7,6 +7,19 @@
     overflow-y: auto;
 }
 
+
+.sidebar::-webkit-scrollbar {
+    width: 16px;
+}
+
+.sidebar::-webkit-scrollbar-thumb {
+    background-color: #909090;
+}
+
+.sidebar::-webkit-scrollbar-track {
+    background-color: rgb(18, 18, 18);
+}
+
 .sidebar .brand {
     padding-bottom: 18px;
     font-size: 40px;

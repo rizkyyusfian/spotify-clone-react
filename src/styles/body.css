@@ -1,9 +1,25 @@
 .body {
-    padding: 80px 32px 32px 262px;
+    padding: 80px 32px 32px 180px;
     max-height: 100vh;
     min-height: 100vh;
-    /* background: dodgerblue; */
-    overflow-y: auto;
     background-color: rgb(18, 18, 18);
-    background: dodgerblue;
+}
+
+.body::-webkit-scrollbar {
+    width: 16px;
+}
+
+.body::-webkit-scrollbar-thumb {
+    background-color: #909090;
+}
+
+.body::-webkit-scrollbar-track {
+    background-color: rgb(18, 18, 18);
+}
+
+.body {
+    color: #b3b3b3;
+    font-size: 1rem;
+    margin-top: -8px;
+    font-weight: 100;
 }

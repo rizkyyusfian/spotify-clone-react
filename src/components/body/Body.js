@@ -3,8 +3,8 @@ import HomePage from "../homePage/HomePage";
 
 function Body({children}) {
     return (
-        <div className="body">
-            <HomePage />
+        <div>
+            {children ? children : <HomePage />}
         </div>
     )
 }
