@@ -59,9 +59,6 @@ const Header = ({ updateSearchResults }) => {
 
             window.location = 'https://accounts.spotify.com/authorize?' + args;
         });
-
-        // get token when login
-        getToken();
     };
 
     const getToken = () => {
@@ -189,6 +186,8 @@ const Header = ({ updateSearchResults }) => {
     };
 
     useEffect(() => {
+        // get token when login
+        getToken();
 
         if (accessToken) {
             getUserProfile();

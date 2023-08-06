@@ -40,10 +40,18 @@ const MusicSection = ({ header }) => {
     useEffect(() => {
         if (sessionStorage.getItem('access_token')) {
             getRecentlyPlayed();
-            getRecommendations();
         }
 
     }, []);
+
+    useEffect(() => {
+        if (sessionStorage.getItem('access_token')) {
+            if (recentlyPlayed.length > 0) {
+                getRecommendations();
+            }
+        }
+
+    }, [recentlyPlayed]);
 
 
     return (

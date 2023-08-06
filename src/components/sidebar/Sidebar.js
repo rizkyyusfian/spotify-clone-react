@@ -19,9 +19,9 @@ const Sidebar = () => {
     };
 
     const linkTab = {
-        playlist: `https://api.spotify.com/v1/users/${localStorage.getItem('user_id')}/playlists?limit=8`,
-        album: `https://api.spotify.com/v1/me/albums?limit=8`,
-        artist: `https://api.spotify.com/v1/me/following?type=artist&limit=8`,
+        playlist: `https://api.spotify.com/v1/users/${localStorage.getItem('user_id')}/playlists?limit=10`,
+        album: `https://api.spotify.com/v1/me/albums?limit=10`,
+        artist: `https://api.spotify.com/v1/me/following?type=artist&limit=10`,
     }
 
     const getData = async () => {
