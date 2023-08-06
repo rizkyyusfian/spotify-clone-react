@@ -160,7 +160,6 @@ const Header = ({ updateSearchResults, isLoggedIn, updateIsLoggedIn }) => {
             .then((response) => response.json())
             .then((data) => {
                 localStorage.setItem('user', data.display_name)
-                localStorage.setItem('user_id', data.id)
             })
             .catch((error) => console.log('Error fetching user profile:', error));
     };
@@ -170,7 +169,6 @@ const Header = ({ updateSearchResults, isLoggedIn, updateIsLoggedIn }) => {
         updateIsLoggedIn(false);
         // setAccessToken(null);
         localStorage.removeItem('user');
-        localStorage.removeItem('user_id');
         localStorage.removeItem('refresh_token');
         localStorage.removeItem('code_verifier');
         sessionStorage.removeItem('access_token');

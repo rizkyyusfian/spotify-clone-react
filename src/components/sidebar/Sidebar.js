@@ -20,7 +20,7 @@ const Sidebar = () => {
     };
 
     const linkTab = {
-        playlist: `https://api.spotify.com/v1/users/${localStorage.getItem('user_id')}/playlists?limit=10`,
+        playlist: `https://api.spotify.com/v1/me/playlists?limit=10`,
         album: `https://api.spotify.com/v1/me/albums?limit=10`,
         artist: `https://api.spotify.com/v1/me/following?type=artist&limit=10`,
     }
@@ -36,10 +36,13 @@ const Sidebar = () => {
             .then((data) => {
                 if (activeTab === 'playlist') {
                     setPlaylistData(data);
+                    console.log(data);
                 } else if (activeTab === 'album') {
                     setAlbumData(data);
+                    console.log(data);
                 } else if (activeTab === 'artist') {
                     setArtistData(data);
+                    console.log(data);
                 }
             })
             .catch((error) => console.error('Error fetching data:', error));
@@ -49,7 +52,7 @@ const Sidebar = () => {
         if (isLoggedIn) {
             getData();
         }
-    }, [activeTab]);
+    }, [isLoggedIn, activeTab]);
 
 
     return (

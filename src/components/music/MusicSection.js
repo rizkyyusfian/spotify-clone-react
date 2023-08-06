@@ -42,9 +42,10 @@ const MusicSection = ({ header }) => {
     useEffect(() => {
         if (isLoggedIn) {
             getRecentlyPlayed();
+            getRecommendations();
         }
 
-    }, []);
+    }, [isLoggedIn]);
 
     useEffect(() => {
         if (isLoggedIn) {
@@ -53,7 +54,7 @@ const MusicSection = ({ header }) => {
             }
         }
 
-    }, [recentlyPlayed]);
+    }, [isLoggedIn, recentlyPlayed]);
 
 
     return (
