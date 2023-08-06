@@ -3,8 +3,8 @@ import '../../styles/header.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { solid } from '@fortawesome/fontawesome-svg-core/import.macro'
 
-const Header = ({ updateSearchResults }) => {
-    const [accessToken, setAccessToken] = useState(null);
+const Header = ({ updateSearchResults, isLoggedIn, updateIsLoggedIn }) => {
+    // const [accessToken, setAccessToken] = useState(null);
     const [dropdown, setDropdown] = useState(false);
     const [query, setQuery] = useState('');
     const dropdownRef = useRef(null);
@@ -61,7 +61,7 @@ const Header = ({ updateSearchResults }) => {
         });
     };
 
-    const getToken = () => {
+    const handleCallbackLogin =  async () => {
         const urlParams = new URLSearchParams(window.location.search);
         let code = urlParams.get('code');
         let codeVerifier = localStorage.getItem('code_verifier');
@@ -75,7 +75,7 @@ const Header = ({ updateSearchResults }) => {
         });
 
         // Exchange authorization code for access token
-        fetch('https://accounts.spotify.com/api/token', {
+        await fetch('https://accounts.spotify.com/api/token', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/x-www-form-urlencoded'
@@ -88,13 +88,15 @@ const Header = ({ updateSearchResults }) => {
             return response.json();
         }).then(data => {
             sessionStorage.setItem('access_token', data.access_token);
-            setAccessToken(sessionStorage.getItem('access_token'));
+            localStorage.setItem('refresh_token', data.refresh_token);
+            // setAccessToken(sessionStorage.getItem('access_token'));
+            updateIsLoggedIn(true);
         }).catch(error => {
-            console.error('Error:', error);
+            console.log('Error:', error);
         });
     };
 
-    const refreshToken = () => {
+    const handleRefreshToken = () => {
         let refreshToken = localStorage.getItem('refresh_token');
 
         let body = new URLSearchParams({
@@ -116,15 +118,13 @@ const Header = ({ updateSearchResults }) => {
             return response.json();
         }).then(data => {
             sessionStorage.setItem('access_token', data.access_token);
-            setAccessToken(sessionStorage.getItem('access_token'));
-
+            // setAccessToken(sessionStorage.getItem('access_token'));
         }).catch(error => {
-            console.error('Error:', error);
+            console.log('Error:', error);
         });
     };
 
     const getSearch = () => {
-        // ttps://api.spotify.com/v1/search?q=${query}&type=track%2Cartist&limit=10
         fetch(`https://api.spotify.com/v1/search?q=${query}&type=track&limit=10`, {
             method: "GET",
             headers: {
@@ -133,7 +133,7 @@ const Header = ({ updateSearchResults }) => {
         })
             .then((response) => response.json())
             .then((data) => updateSearchResults(data.tracks.items))
-            .catch((error) => console.error('Error searching for tracks:', error));
+            .catch((error) => console.log('Error searching for tracks:', error));
     };
 
     const handleSearchChange = (e) => {
@@ -144,10 +144,7 @@ const Header = ({ updateSearchResults }) => {
         timeoutRef.current = setTimeout(() => {
             if (e.target.value === '') {
                 updateSearchResults(null);
-
             } else {
-                // Call your function to fetch search results here (e.g., getSearchResults)
-                // Pass the search query as an argument
                 getSearch();
             }
         }, 500);
@@ -165,13 +162,18 @@ const Header = ({ updateSearchResults }) => {
                 localStorage.setItem('user', data.display_name)
                 localStorage.setItem('user_id', data.id)
             })
-            .catch((error) => console.error('Error fetching user profile:', error));
+            .catch((error) => console.log('Error fetching user profile:', error));
     };
 
     const handleLogout = () => {
         updateSearchResults(null);
+        updateIsLoggedIn(false);
+        // setAccessToken(null);
+        localStorage.removeItem('user');
+        localStorage.removeItem('user_id');
+        localStorage.removeItem('refresh_token');
+        localStorage.removeItem('code_verifier');
         sessionStorage.removeItem('access_token');
-        setAccessToken(null);
         window.location = 'http://localhost:3000/';
     }
 
@@ -187,19 +189,19 @@ const Header = ({ updateSearchResults }) => {
 
     useEffect(() => {
         // get token when login
-        getToken();
+        handleCallbackLogin();
 
-        if (accessToken) {
+        if (isLoggedIn) {
             getUserProfile();
         }
 
         // Listen for changes to the URL and extract the access token when it changes
-        window.addEventListener('hashchange', getToken);
+        window.addEventListener('hashchange', handleCallbackLogin);
         document.addEventListener('mousedown', handleOutsideClick);
 
         // Clean up the event listener when the component unmounts
         return () => {
-            window.removeEventListener('hashchange', getToken);
+            window.removeEventListener('hashchange', handleCallbackLogin);
             document.removeEventListener('mousedown', handleOutsideClick);
         };
     }, []);
@@ -223,14 +225,14 @@ const Header = ({ updateSearchResults }) => {
                 <input type="text" onChange={handleSearchChange} id="search" name="search" className="input" placeholder="Search" />
             </div>
 
-            {accessToken ?
+            {isLoggedIn ?
                 <div className="dropdown">
                     <button className="dropdown--button" onClick={toggleDropdown}>
                         <span className="user-icon">
                             <FontAwesomeIcon icon={solid("user")} />
                         </span>
                         <span className="text-bold">
-                            {accessToken && localStorage.getItem('user')}
+                            { localStorage.getItem('user')}
                         </span>
                         <span>
                             <FontAwesomeIcon icon={solid("chevron-down")} />

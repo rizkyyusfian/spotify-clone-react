@@ -1,18 +1,19 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useContext } from 'react';
 import '../../styles/sidebar.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { brands, solid } from '@fortawesome/fontawesome-svg-core/import.macro'
 import SidebarMenu from './SidebarMenu.js';
 import SidebarTabCard from './SidebarTabCard';
+import LoginContext from '../../contexts/LoginContext';
 
 
 // spotify sidebar
 const Sidebar = () => {
     const [activeTab, setActiveTab] = useState('playlist');
-    const [data, setData] = useState(null);
     const [playlistData, setPlaylistData] = useState(null);
     const [albumData, setAlbumData] = useState(null);
     const [artistData, setArtistData] = useState(null);
+    const { isLoggedIn } = useContext(LoginContext);
 
     const handleTabChange = (tab) => {
         setActiveTab(tab);
@@ -45,7 +46,7 @@ const Sidebar = () => {
     }
 
     useEffect(() => {
-        if (sessionStorage.getItem('access_token')) {
+        if (isLoggedIn) {
             getData();
         }
     }, [activeTab]);
@@ -60,10 +61,12 @@ const Sidebar = () => {
                 <SidebarMenu
                     text="Home"
                     icon={solid("home")}
+                    link="/"
                 />
                 <SidebarMenu
                     text="Search"
                     icon={solid("search")}
+                    link="/search"
                 />
             </div>
             <div className="separator"></div>

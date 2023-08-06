@@ -1,11 +1,13 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useContext } from 'react';
 import "../../styles/homepage.css";
 import MusicCard from "./MusicCard";
+import LoginContext from '../../contexts/LoginContext';
 
 const MusicSection = ({ header }) => {
 
     const [recentlyPlayed, setRecentlyPlayed] = useState([]);
     const [recommendations, setRecommendations] = useState([]);
+    const { isLoggedIn } = useContext(LoginContext);
 
     const getRecentlyPlayed = async () => {
         await fetch('https://api.spotify.com/v1/me/top/tracks?limit=7', {
@@ -38,14 +40,14 @@ const MusicSection = ({ header }) => {
     }
 
     useEffect(() => {
-        if (sessionStorage.getItem('access_token')) {
+        if (isLoggedIn) {
             getRecentlyPlayed();
         }
 
     }, []);
 
     useEffect(() => {
-        if (sessionStorage.getItem('access_token')) {
+        if (isLoggedIn) {
             if (recentlyPlayed.length > 0) {
                 getRecommendations();
             }

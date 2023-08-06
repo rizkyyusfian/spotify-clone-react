@@ -1,10 +1,9 @@
+import React from "react";
 import "../../styles/body.css";
-import HomePage from "../homePage/HomePage";
 
-function Body({children}) {
+function Body() {
     return (
-        <div>
-            {children ? children : <HomePage />}
+        <div className="body">
         </div>
     )
 }
