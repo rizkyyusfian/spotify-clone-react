@@ -111,12 +111,6 @@ const Sidebar = () => {
                         />
                     ))}
             </div>
-            <div className="sidebar--download-app">
-                <a href="#">
-                    <FontAwesomeIcon icon={solid("circle-info")} />
-                    <span>Install the app</span>
-                </a>
-            </div>
         </nav>
     )
 }
