@@ -16,6 +16,10 @@ const Sidebar = () => {
     const [albumData, setAlbumData] = useState(null);
     const [artistData, setArtistData] = useState(null);
     const { isLoggedIn } = useContext(LoginContext);
+    const [form, setForm] = useState({
+        playlistName: '',
+        playlistDescription: ''
+    });
 
     const handleTabChange = (tab) => {
         setActiveTab(tab);
@@ -50,16 +54,21 @@ const Sidebar = () => {
             .catch((error) => console.error('Error fetching data:', error));
     }
 
-    const createPlaylist = async () => {
+    const handleMyText = (e) => {
+        const { value, name } = e.target;
+        setForm({ ...form, [name]: value, [name]: value });
+    };
+
+    const createPlaylist = async (playlistname, playlistDescription) => {
         await fetch(`https://api.spotify.com/v1/users/${sessionStorage.getItem('user_id')}/playlists`, {
             method: 'POST',
             headers: {
                 Authorization: `Bearer ${sessionStorage.getItem('access_token')}`,
             },
             body: JSON.stringify({
-                name: 'New Playlist dari react',
-                description: 'ULALALALA',
-                public: false
+                name: playlistname,
+                description: playlistDescription,
+                public: true
             })
         })
             .then((response) => response.json())
@@ -68,6 +77,14 @@ const Sidebar = () => {
             })
             .catch((error) => console.log('Error creating playlist:', error));
     }
+
+    const handleForm = (e) => {
+        e.preventDefault();
+        console.log(form.playlistName);
+        console.log(form.playlistDescription);
+        createPlaylist(form.playlistName, form.playlistDescription);
+        setDropdown(false);
+    };
 
     const toggleDropdown = () => {
         setDropdown(!dropdown);
@@ -125,11 +142,9 @@ const Sidebar = () => {
                             </button>
                             {dropdown && (
                                 <ul className="dropdown--content" style={{ display: 'block' }}>
-                                    <form className="dropdown--content--form">
-                                        <input type="text" name='playlist' placeholder="New Playlist" />
-                                        {/* <br/><br/> */}
-                                        <input type="text" name='description' placeholder="Description" />
-                                        {/* <br/><br/> */}
+                                    <form className="dropdown--content--form" onSubmit={handleForm}>
+                                        <input type="text" id='playlistName' name='playlistName' value={form.playlistName} placeholder="New Playlist" onChange={handleMyText} />
+                                        <input type="text" id='playlistDescription' name='playlistDescription' value={form.playlistDescription} placeholder="Description" onChange={handleMyText} />
                                         <button className="dropdown--content--form--button">Create</button>
                                     </form>
                                 </ul>
@@ -154,7 +169,7 @@ const Sidebar = () => {
                     playlistData.items.map((item, index) => (
                         <SidebarTabCard
                             key={index}
-                            img={item.images[0].url}
+                            img={item.images[0]?.url || 'https://via.placeholder.com/48'}
                             text={item.name}
                             subtitle={item.owner.display_name}
                             type={activeTab}
@@ -164,9 +179,9 @@ const Sidebar = () => {
                     albumData.items.map((item, index) => (
                         <SidebarTabCard
                             key={index}
-                            img={item.album.images[0].url}
+                            img={item.album.images[0]?.url || 'https://via.placeholder.com/48' }
                             text={item.album.name}
-                            subtitle={item.album.artists[0].name}
+                            subtitle={item.album.artists[0]?.name}
                             type={activeTab}
                         />
                     ))}
@@ -174,7 +189,7 @@ const Sidebar = () => {
                     artistData.artists.items.map((item, index) => (
                         <SidebarTabCard
                             key={index}
-                            img={item.images[0].url}
+                            img={item.images[0]?.url || 'https://via.placeholder.com/48'}
                             text={item.name}
                             subtitle=""
                             type={activeTab}

@@ -43,7 +43,7 @@ const Header = ({ updateSearchResults, isLoggedIn, updateIsLoggedIn }) => {
 
         generateCodeChallenge(codeVerifier).then(codeChallenge => {
             let state = generateRandomString(16);
-            let scope = 'user-read-private user-read-email playlist-read-private user-library-read user-follow-read user-top-read';
+            let scope = 'user-read-private user-read-email playlist-read-private user-library-read user-follow-read user-top-read playlist-modify-private playlist-modify-public';
 
             localStorage.setItem('code_verifier', codeVerifier);
 
