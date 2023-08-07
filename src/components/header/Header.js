@@ -160,6 +160,8 @@ const Header = ({ updateSearchResults, isLoggedIn, updateIsLoggedIn }) => {
             .then((response) => response.json())
             .then((data) => {
                 localStorage.setItem('user', data.display_name)
+                sessionStorage.setItem('user', data.display_name)
+                sessionStorage.setItem('user_id', data.id)
             })
             .catch((error) => console.log('Error fetching user profile:', error));
     };
@@ -240,7 +242,7 @@ const Header = ({ updateSearchResults, isLoggedIn, updateIsLoggedIn }) => {
                         <ul className="dropdown--content" style={{ display: 'block' }}>
                             <li>Profile</li>
                             <li>Setting</li>
-                            <li><button onClick={handleLogout}>Logout</button></li>
+                            <li><button className="dropdown--button--logout" onClick={handleLogout}>Logout</button></li>
                         </ul>
                     )}
                 </div>
